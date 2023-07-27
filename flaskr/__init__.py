@@ -1,30 +1,22 @@
-from flask import Flask, request
-import sqlite3
+import os
+from flask import Flask
 
-app = Flask(__name__)
-
-def create_connection():
-    conn = sqlite3.connect('books.db')
-    return conn
-
-@app.route('/')
-def home():
-    return "Hello there"
-@app.route("/addrec", methods = ['POST', 'GET'])
-def addrec():
-    if request.method == "POST":
-        id = request.form["id"]
-        name = request.form["name"]
-        author = request.form["author"]
-        rating = request.form["rating"]
-        
-        conn = sqlite3.connect('books.db')
-        cur = conn.cursor()
-
-        cur.execute("INSERT INTO books VALUES (?, ?, ?, ?)", (id, name, author, rating))
-        conn.commit()
-
-        return "Correct!"
-
-if __name__ == "__main__":
-    app.run() 
+def create_app(test_config = None):
+    #This is the application factory where the app is created and configuration is done
+    app = Flask(__name__, instance_relative_config = True)
+    app.config.from_mapping(
+        SECRET_KEY = 'devs',
+        DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite')
+    )
+    if test_config is None:
+        app.config.from_pyfile('config.py', silent = True)
+    else:
+        app.config.from_mapping(test_config)
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+    @app.route('/hello')
+    def hello():
+        return "Hello, world!"
+    return app

@@ -1,8 +1,7 @@
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE user(
+CREATE TABLE users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL, 
-    isAdmin TEXT NOT NULL
+    password TEXT NOT NULL
 );

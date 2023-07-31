@@ -5,3 +5,18 @@ CREATE TABLE users(
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 );
+
+CREATE TABLE books(
+    bookID INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    authors TEXT NOT NULL,
+    average_rating REAL DEFAULT 0,
+    isbn TEXT,
+    isbn13 TEXT,
+    language_code TEXT,
+    num_pages INTEGER,
+    ratings_count INTEGER DEFAULT 0,
+    text_reviews_count INTEGER DEFAULT 0,
+    publication_date TEXT,
+    publisher TEXT
+);

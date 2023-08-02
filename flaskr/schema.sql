@@ -4,6 +4,7 @@ CREATE TABLE users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
+
 );
 
 CREATE TABLE books(
@@ -19,4 +20,18 @@ CREATE TABLE books(
     text_reviews_count INTEGER DEFAULT 0,
     publication_date TEXT,
     publisher TEXT
+);
+
+CREATE TABLE bookuser(
+    userID INTEGER REFERENCES users(id),
+    bookID INTEGER REFERENCES books(bookID),
+    rating INTEGER,
+    comment TEXT,
+    PRIMARY KEY (userID, bookID)
+);
+
+CREATE TABLE userfavorites(
+    userID INTEGER REFERENCES users(id),
+    bookID INTEGER REFERENCES books(bookID),
+    PRIMARY KEY (userID, bookID)
 );

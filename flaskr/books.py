@@ -26,6 +26,12 @@ bp = Blueprint('books', __name__, url_prefix = '/books')
 def find():
     db = get_db()
     find = request.form["find"]
-    cursor = db.execute("SELECT title FROM books WHERE title LIKE ?", (f"{find}%",))
+    cursor = db.execute("SELECT title FROM books WHERE title LIKE ?", (f"%{find}%",))
     titles = cursor.fetchall()
-    return titles
+
+    highlighted_titles = [title[0].replace("the", f"<mark>{find}</mark>") for title in titles]
+    highlighted_titles = [f"</br>{title}</br>" for title in highlighted_titles]
+
+    return "\n\n".join(highlighted_titles)
+    # return [title for title in highlighted_titles]
+    # return titles

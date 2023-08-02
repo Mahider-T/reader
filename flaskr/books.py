@@ -35,3 +35,25 @@ def find():
     return "\n\n".join(highlighted_titles)
     # return [title for title in highlighted_titles]
     # return titles
+
+@bp.route("/comment")
+def comment():
+    db = get_db()
+    comment = request.form["comment"]
+    from . import auth
+    userID = session["user_id"]
+    # username = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
+    bookID = request.form["bookID"]
+    rating = request.form["rating"]
+    # userid = request.form["userid"]
+    db.execute("INSERT INTO bookuser (userID, bookID, rating, comment)values (?,?,?,?)", (int(userID), bookID, rating, comment,))
+    db.commit()
+    return f"{userID}"
+
+@bp.route("getUser")
+def getUser():
+    userID = session["user_id"]
+    return f"username is {userID}"
+
+
+

@@ -8,6 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix = '/auth')
+# global_userID = "initial"
 
 
 @bp.route("/hello")
@@ -45,6 +46,7 @@ def register():
 @bp.route("/login", methods = ("GET", "POST"))
 def login():
     if request.method == "POST":
+        # global_userID = ""
         username = request.form["username"]
         password = request.form["password"]
 
@@ -61,12 +63,14 @@ def login():
         
         if row is None:
             error = "No such user."
-        elif not check_password_hash(row['password'], password):
+        elif not check_password_hash(row[2], password):
             error = "Incorrect password"
         
         if error is None:
             session.clear()
-            session['user_id'] = row['id']
+            session['user_id'] = row[0]
+            global_userID =  session['user_id']
+            # global_userID = session['user_id']
             # return redirect(url_for('books.find'))
             return "Successfully logged in!"
         flash(error)
@@ -75,7 +79,14 @@ def login():
 @bp.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    # return redirect(url_for('index'))
+    return "Successfully logged out!"
+@bp.route("getUser")
+def getUser():
+    user = session['user_id']
+    global_userID =  session['user_id']
+    return f"{global_userID}"
+
 
 # function below makes only authenticated users use functionalities 
 def login_required(view):
@@ -85,4 +96,5 @@ def login_required(view):
             return redirect(url_for('auth.login'))
         return view(**kwargs)
     return wrapped_view
+
 

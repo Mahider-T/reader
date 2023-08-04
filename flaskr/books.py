@@ -40,19 +40,39 @@ def find():
     # titles = [title for title in titles]
     # return jsonify(attr)
 
-@bp.route("/comment")
-def comment():
-    db = get_db()
-    comment = request.form["comment"]
+@bp.route("/comment/<int:id>", methods = ("GET", "POST", "PUT"))
+def comment(id):
     from . import auth
     userID = session["user_id"]
-    # username = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
-    bookID = request.form["bookID"]
-    rating = request.form["rating"]
-    # userid = request.form["userid"]
-    db.execute("INSERT INTO bookuser (userID, bookID, rating, comment)values (?,?,?,?)", (int(userID), bookID, rating, comment,))
-    db.commit()
-    return f"{userID}"
+    if request.method == "GET":
+        db = get_db()
+        cursor = db.execute("SELECT * FROM bookuser WHERE bookID = ?", (id,))
+        cursor = cursor.fetchall()
+        return jsonify(cursor)
+    if request.method == "POST":
+        db = get_db()
+        comment = request.form["comment"]
+
+        # from . import auth
+        # userID = session["user_id"]
+
+        db.execute("INSERT INTO bookuser (userID, bookID, comment) values (?,?,?)", (int(userID), id, comment,))
+        db.commit()
+        return f"{id} --- {userID} --- {comment}"
+    else:
+        db = get_db()
+        comment = request.form["comment"]
+        db.execute("UPDATE bookuser SET comment = ? WHERE userID = ? AND bookID = ?", (comment,int(userID), id,))
+        db.commit()
+        title = db.execute("SELECT title FROM books WHERE bookID = ?", (int(id),))
+        title = title.fetchone()
+        update = {
+            "bookID": id,
+            "title": title[0],
+            "comment": comment 
+        }
+        return jsonify(update)
+        
 
 @bp.route("/addbook", methods = ("GET", "POST"))
 def addbook():

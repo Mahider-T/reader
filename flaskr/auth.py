@@ -73,7 +73,7 @@ def login():
             # global_userID = session['user_id']
             # return redirect(url_for('books.find'))
             return "Successfully logged in!"
-        flash(error)
+        # flash(error)
     return render_template('auth/login.html')
 
 @bp.route("/logout")

@@ -22,19 +22,23 @@ bp = Blueprint('books', __name__, url_prefix = '/books')
 #             db.commit()
 #     return "Succuss!"
 
-@bp.route("/find")
+@bp.route("/findbookattributes")
 def find():
     db = get_db()
     find = request.form["find"]
-    cursor = db.execute("SELECT title FROM books WHERE title LIKE ?", (f"%{find}%",))
-    titles = cursor.fetchall()
+    cursor = db.execute("SELECT * FROM books WHERE title LIKE ?", (f"%{find}%",))
+    titles = cursor.fetchall()  
+    attr = jsonify(titles)
+    return attr
+    # attr = [title for title in titles ] 
+    # highlighted_titles = [title[0].replace("the", f"<mark>{find}</mark>") for title in titles]
+    # highlighted_titles = [f"</br>{title}</br>" for title in highlighted_titles]
 
-    highlighted_titles = [title[0].replace("the", f"<mark>{find}</mark>") for title in titles]
-    highlighted_titles = [f"</br>{title}</br>" for title in highlighted_titles]
-
-    return "\n\n".join(highlighted_titles)
+    # return "\n\n".join(highlighted_titles)
     # return [title for title in highlighted_titles]
-    # return titles
+    # titles = f"{type(titles[0])}"
+    # titles = [title for title in titles]
+    # return jsonify(attr)
 
 @bp.route("/comment")
 def comment():
@@ -49,6 +53,19 @@ def comment():
     db.execute("INSERT INTO bookuser (userID, bookID, rating, comment)values (?,?,?,?)", (int(userID), bookID, rating, comment,))
     db.commit()
     return f"{userID}"
+
+@bp.route("/addbook", methods = ("GET", "POST"))
+def addbook():
+    if request.method == "POST":
+        # bookID = request.form["bookID"]
+        title = request.form["title"]
+        author = request.form["author"]
+        isbn = request.form["isbn"]
+        isbn13 = request.form["isbn13"]
+
+        db = get_db()
+        db.execute("INSERT INTO books (title, authors, isbn, isbn13) VALUES (?,?,?,?)", (title, author, isbn,isbn13,))
+        db.commit()
 
 @bp.route("getUser")
 def getUser():

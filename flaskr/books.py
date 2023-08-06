@@ -28,7 +28,8 @@ def find():
     find = request.form["find"]
     cursor = db.execute("SELECT * FROM books WHERE title LIKE ?", (f"%{find}%",))
     titles = cursor.fetchall()  
-    attr = jsonify(titles)
+    attr = titles
+    result = [final for final in attr ]
     return attr
     # attr = [title for title in titles ] 
     # highlighted_titles = [title[0].replace("the", f"<mark>{find}</mark>") for title in titles]
@@ -72,7 +73,21 @@ def comment(id):
             "comment": comment 
         }
         return jsonify(update)
-        
+
+@bp.route("/rate/<int:id>", methods = ("GET", "POST", "PUT"))
+def rate(id):
+    from . import auth
+    userID = session["user_id"]
+    db = get_db()
+    if request.method == "POST":
+        rate = request.form["rate"]
+        execution = db.execute("INSERT INTO bookuser (userID, bookID, rating) VALUES (?,?,?)", (userID, id, rate,))
+        db.commit()
+        rating = {
+            "bookID": id,
+            "rate" : rate
+        }
+        return jsonify(rating)
 
 @bp.route("/addbook", methods = ("GET", "POST"))
 def addbook():

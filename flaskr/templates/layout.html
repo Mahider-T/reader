@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %} {% endblock %}
+</head>
+<body>
+    <nav>
+        {% if not session["user_id"] %}
+           <ul>
+                <li><a href = "/register"></a>Register</li>
+                <li><a href = "/login"></a>Login</li>
+           </ul>
+        {% else %}
+           <li><a href = "/filter">Filter</a></li>
+           <li><a href = "/mybooks">My books</a></li>
+        {% endif %}
+    </nav>
+    <main>
+        {% block main %}{% endblock %}
+
+    </main>
+    
+    
+</body>
+</html>

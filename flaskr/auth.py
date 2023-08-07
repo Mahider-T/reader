@@ -36,12 +36,14 @@ def register():
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
+                # return "Hello"
                 # flash("Success!")
-                return "Success!"
-                # return redirect(url_for("auth.login"))
+                # return redirect("login.html")
+                # return "f{username} registered"
+                return redirect(url_for("auth.login"))
         flash(error)
-
-    return render_template('auth/register.html')    
+    else:
+        return render_template('register.html')    
 
 @bp.route("/login", methods = ("GET", "POST"))
 def login():
@@ -66,15 +68,18 @@ def login():
         elif not check_password_hash(row[2], password):
             error = "Incorrect password"
         
+        # return f"{error}"
+        
         if error is None:
             session.clear()
             session['user_id'] = row[0]
             global_userID =  session['user_id']
             # global_userID = session['user_id']
-            # return redirect(url_for('books.find'))
-            return "Successfully logged in!"
-        # flash(error)
-    return render_template('auth/login.html')
+            return redirect(url_for('hello'))
+            return "Success!"
+        flash(error)
+    else:
+        return render_template('login.html')
 
 @bp.route("/logout")
 def logout():

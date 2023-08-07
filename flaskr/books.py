@@ -103,7 +103,17 @@ def addbook():
         db = get_db()
         db.execute("INSERT INTO books (title, authors, isbn, isbn13) VALUES (?,?,?,?)", (title, author, isbn,isbn13,))
         db.commit()
-
+@bp.route("/topbooks")
+def topbooks():
+    db = get_db()
+    # results = db.execute("SELECT title, authors, average_rating, publication_date, publisher FROM books ORDER BY average_rating DESC LIMIT 10;")
+    results = db.execute("SELECT title, average_rating FROM books ORDER BY average_rating DESC LIMIT 10;")
+    results = results.fetchall()
+    results = [result for result in results]
+    # for item in results:
+    #     if 
+    return render_template("topbooks.html", results = results)
+    # return result
 # @bp.route("/myBooks")
 # def myBooks():
 #     db = get_db()

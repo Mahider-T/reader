@@ -8,6 +8,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
 
+from flaskr.auth import login_required
+
 bp = Blueprint('books', __name__, url_prefix = '/books')
         
 #The below route was used to initialize the books table for the first time by reading from a csv file
@@ -103,9 +105,11 @@ def addbook():
         db.commit()
 
 @bp.route("getUser")
+@login_required
 def getUser():
-    userID = session["user_id"]
-    return f"username is {userID}"
+    # userID = session["user_id"]
+    # return f"userid is {userID}"
+    return "whatttaaaaa"
 
 
 

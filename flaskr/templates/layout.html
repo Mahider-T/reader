@@ -11,12 +11,13 @@
     <nav>
         {% if not session["user_id"] %}
            <ul>
-                <li><a href = "/register"></a>Register</li>
-                <li><a href = "/login"></a>Login</li>
+                <li><a href = "/auth/register">Register</a></li>
+                <li><a href = "/auth/login">Login</a></li>
            </ul>
         {% else %}
            <li><a href = "/filter">Filter</a></li>
            <li><a href = "/mybooks">My books</a></li>
+           <li><a href = "auth/logout">Logout</a></li>
         {% endif %}
     </nav>
     <main>

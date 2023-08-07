@@ -1,5 +1,6 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
+from flaskr.auth import login_required
 
 def create_app(test_config = None):
     #This is the application factory where the app is created and configuration is done
@@ -17,8 +18,10 @@ def create_app(test_config = None):
     except OSError:
         pass
     @app.route('/')
+    @login_required
     def hello():
-        return "Welcome"
+        result = "name"
+        return render_template("index.html", result = result)
     
     from . import db
     db.init_app(app)

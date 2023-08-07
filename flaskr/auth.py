@@ -85,7 +85,7 @@ def login():
 def logout():
     session.clear()
     # return redirect(url_for('index'))
-    return "Successfully logged out!"
+    return redirect(url_for("auth.login"))
 @bp.route("getUser")
 def getUser():
     user = session['user_id']
@@ -93,6 +93,16 @@ def getUser():
     return f"{global_userID}"
 
 
+@bp.before_app_request
+def load_logged_in_user():
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = get_db().execute(
+            'SELECT * FROM users WHERE id = ?', (user_id,)
+        ).fetchone()
 # function below makes only authenticated users use functionalities 
 def login_required(view):
     @functools.wraps(view)

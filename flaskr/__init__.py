@@ -17,11 +17,12 @@ def create_app(test_config = None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    @app.route('/')
-    @login_required
-    def hello():
-        result = "name"
-        return render_template("index.html", result = result)
+    # @app.route('/')
+    # @login_required
+    # def hello():
+
+    #     result = "name"
+    #     return render_template("index.html", result = result)
     
     from . import db
     db.init_app(app)
@@ -31,4 +32,9 @@ def create_app(test_config = None):
 
     from . import books
     app.register_blueprint(books.bp)
+    
+
+    from . import display
+    app.register_blueprint(display.bp)
+
     return app

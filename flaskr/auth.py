@@ -75,7 +75,8 @@ def login():
             session['user_id'] = row[0]
             global_userID =  session['user_id']
             # global_userID = session['user_id']
-            return redirect(url_for('hello'))
+            return redirect(url_for('display.yourbooks'))
+            # return render_template("index.html")
             return "Success!"
         flash(error)
     else:

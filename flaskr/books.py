@@ -104,6 +104,13 @@ def addbook():
         db.execute("INSERT INTO books (title, authors, isbn, isbn13) VALUES (?,?,?,?)", (title, author, isbn,isbn13,))
         db.commit()
 
+# @bp.route("/myBooks")
+# def myBooks():
+#     db = get_db()
+#     db.execute()
+
+
+
 @bp.route("getUser")
 @login_required
 def getUser():

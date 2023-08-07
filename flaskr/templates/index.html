@@ -5,5 +5,25 @@
 {% endblock %}
 
 {% block main %}
-    <p style = "color: red">name</p>
+    <div> <h1>Your books</h1></div>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Average rating</th>
+            <th>Your Comment</th>
+            <th>Your rating</th>
+        </tr>
+        {% for favorite in favorites %}
+        <tr>
+            <td>{{favorite[0]}}</td>
+            <td>{{favorite[1]}}</td>
+            <td>{{favorite[2]}}</td>
+            <td>{{favorite[3]}}</td>
+            <td>{{favorite[4]}}</td>
+            <td>{{favorite[5]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

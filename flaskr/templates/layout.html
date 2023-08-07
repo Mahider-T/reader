@@ -15,9 +15,16 @@
                 <li><a href = "/auth/login">Login</a></li>
            </ul>
         {% else %}
-           <li><a href = "/filter">Filter</a></li>
-           <li><a href = "/mybooks">My books</a></li>
-           <li><a href = "auth/logout">Logout</a></li>
+           <div>
+                <li><a href = "/filter">Filter</a></li>
+                <li><a href = "/search">My books</a></li>
+                <li><a href = "/topbooks">Top rated</a></li>
+                <li><a href = "/trending">Trending</a></li>
+           </div>
+           <div>
+                <li><a href = "auth/logout">Logout</a></li>
+           </div>
+         
         {% endif %}
     </nav>
     <main>

@@ -40,7 +40,7 @@ def find():
         
         # highlighted_titles = [f"</br>{title}</br>" for title in highlighted_titles]
         # return highlighted_titles
-        return render_template("index.html", results = final)
+        return render_template("searchresult.html", results = final)
         # return "\n\n".join(highlighted_titles)
         # return [title for title in highlighted_titles]
         # titles = f"{type(titles[0])}"
@@ -49,7 +49,7 @@ def find():
 @bp.route("/bookinfo/<int:id>")
 def bookinfo(id):
     db = get_db()
-    result = db.execute("SELECT title, authors, average_rating,num_pages, publication_date, publisher FROM books WHERE bookID = ?", (id,)).fetchall()[0]
+    result = db.execute("SELECT title, authors, average_rating,num_pages, publication_date, publisher, bookID FROM books WHERE bookID = ?", (id,)).fetchall()[0]
 
     thisBook = {
         "title": result[0],
@@ -57,7 +57,8 @@ def bookinfo(id):
         "average rating": result[2],
         "number of pages": result[3],
         "publication date": result[4],
-        "publisher":result[5]
+        "publisher":result[5],
+        "id": result[6]
     }
 
     # return thisBook
@@ -67,21 +68,23 @@ def bookinfo(id):
 def comment(id):
     from . import auth
     userID = session["user_id"]
-    if request.method == "GET":
-        db = get_db()
-        cursor = db.execute("SELECT * FROM bookuser WHERE bookID = ?", (id,))
-        cursor = cursor.fetchall()
-        return jsonify(cursor)
+    # if request.method == "GET":
+    #     db = get_db()
+    #     cursor = db.execute("SELECT * FROM bookuser WHERE bookID = ?", (id,))
+    #     cursor = cursor.fetchall()
+    #     return jsonify(cursor)
     if request.method == "POST":
         db = get_db()
         comment = request.form["comment"]
 
         # from . import auth
         # userID = session["user_id"]
-
-        db.execute("INSERT INTO bookuser (userID, bookID, comment) values (?,?,?)", (int(userID), id, comment,))
-        db.commit()
-        return f"{id} --- {userID} --- {comment}"
+        # db.execute("INSERT INTO bookuser (userID, bookID, comment) values (?,?,?)", (int(userID), id, comment,))
+        hasCommented = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,))
+        
+        # db.commit()
+        # return f"{id} --- {userID} --- {comment}"
+        return hasCommented
     else:
         db = get_db()
         comment = request.form["comment"]

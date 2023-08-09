@@ -14,7 +14,7 @@
         <p>Publisher: {{thisBook['publisher']}}</p>
     </div>
 
-    <form action = "/books/comment" method = "POST">
+    <form action = "/books/comment/{{thisBook.id}}" method = "POST">
         <label for = "comment">Comment</label><br>
         <!-- <input type = "textarea" name = "comment"> -->
         <textarea rows = "10" cols = "40" name = "comment" placeholder = "Comment here"></textarea>

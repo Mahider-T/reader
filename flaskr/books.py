@@ -24,6 +24,8 @@ bp = Blueprint('books', __name__, url_prefix = '/books')
 #             db.commit()
 #     return "Succuss!"
 
+globalvalue = None
+
 @bp.route("/find", methods = ("GET", "POST"))
 def find():
     if request.method == "POST":
@@ -61,6 +63,9 @@ def bookinfo(id):
         "id": result[6]
     }
 
+    global globalvalue 
+    globalvalue = thisBook
+
     # return thisBook
     return render_template("eachbook.html", thisBook = thisBook)
 
@@ -79,25 +84,36 @@ def comment(id):
 
         # from . import auth
         # userID = session["user_id"]
-        # db.execute("INSERT INTO bookuser (userID, bookID, comment) values (?,?,?)", (int(userID), id, comment,))
+        # 
         hasCommented = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,))
+        if not hasCommented:
+            db.execute("INSERT INTO bookuser (userID, bookID, comment) values (?,?,?)", (int(userID), id, comment,))
+            db.commit()
+        else:
+            db.execute("UPDATE bookuser SET comment = ? WHERE userID = ? AND bookID = ?", (comment,userID,id))
+            db.commit()
+        updatedBook = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,)).fetchall()
+
+        trial = "Trail text"
+        # return updatedBook
+        return render_template("eachbook.html", thisBook = globalvalue, trail = trial )
         
         # db.commit()
         # return f"{id} --- {userID} --- {comment}"
         return hasCommented
-    else:
-        db = get_db()
-        comment = request.form["comment"]
-        db.execute("UPDATE bookuser SET comment = ? WHERE userID = ? AND bookID = ?", (comment,int(userID), id,))
-        db.commit()
-        title = db.execute("SELECT title FROM books WHERE bookID = ?", (int(id),))
-        title = title.fetchone()
-        update = {
-            "bookID": id,
-            "title": title[0],
-            "comment": comment 
-        }
-        return jsonify(update)
+    # else:
+    #     db = get_db()
+    #     comment = request.form["comment"]
+    #     db.execute("UPDATE bookuser SET comment = ? WHERE userID = ? AND bookID = ?", (comment,int(userID), id,))
+    #     db.commit()
+    #     title = db.execute("SELECT title FROM books WHERE bookID = ?", (int(id),))
+    #     title = title.fetchone()
+    #     update = {
+    #         "bookID": id,
+    #         "title": title[0],
+    #         "comment": comment 
+    #     }
+    #     return jsonify(update)
 
 @bp.route("/rate/<int:id>", methods = ("GET", "POST", "PUT"))
 def rate(id):

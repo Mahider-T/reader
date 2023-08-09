@@ -5,6 +5,14 @@
 {% endblock %}
 
 {% block main %}
+    <form action = "/books/find" method = "POST">
+        <input type = "text" name = "search" id = "find">
+        <button type = "submit">Submit</button>
+    </form>
+
+    {% for result in results %}
+        <a href = "bookinfo/{{result[1]}}">{{result[0]}}</a><br>
+    {% endfor %}
     <div> <h1>Your books</h1></div>
     <table>
         <tr>

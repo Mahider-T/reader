@@ -24,24 +24,44 @@ bp = Blueprint('books', __name__, url_prefix = '/books')
 #             db.commit()
 #     return "Succuss!"
 
-@bp.route("/findbookattributes")
+@bp.route("/find", methods = ("GET", "POST"))
 def find():
-    db = get_db()
-    find = request.form["find"]
-    cursor = db.execute("SELECT * FROM books WHERE title LIKE ?", (f"%{find}%",))
-    titles = cursor.fetchall()  
-    attr = titles
-    result = [final for final in attr ]
-    return attr
-    # attr = [title for title in titles ] 
-    # highlighted_titles = [title[0].replace("the", f"<mark>{find}</mark>") for title in titles]
-    # highlighted_titles = [f"</br>{title}</br>" for title in highlighted_titles]
+    if request.method == "POST":
+        db = get_db()
+        search = request.form.get("search")
+        final = db.execute("SELECT title, bookID FROM books WHERE title LIKE ?", (f"%{search}%",))
+        final = final.fetchall()  
+        # results = [element for element in final]
 
-    # return "\n\n".join(highlighted_titles)
-    # return [title for title in highlighted_titles]
-    # titles = f"{type(titles[0])}"
-    # titles = [title for title in titles]
-    # return jsonify(attr)
+        # return results
+        # attr = [title for title in final] 
+        # highlighted_titles = [title[0].replace(search, f"<mark>{search}</mark>") for title in final]
+        # highlighted_titles = [f'<a href = "google.com">{title[0]}</a><br>' for title in final]
+        
+        # highlighted_titles = [f"</br>{title}</br>" for title in highlighted_titles]
+        # return highlighted_titles
+        return render_template("index.html", results = final)
+        # return "\n\n".join(highlighted_titles)
+        # return [title for title in highlighted_titles]
+        # titles = f"{type(titles[0])}"
+        # titles = [title for title in titles]
+        # return jsonify(attr)
+@bp.route("/bookinfo/<int:id>")
+def bookinfo(id):
+    db = get_db()
+    result = db.execute("SELECT title, authors, average_rating,num_pages, publication_date, publisher FROM books WHERE bookID = ?", (id,)).fetchall()[0]
+
+    thisBook = {
+        "title": result[0],
+        "author": result[1],
+        "average rating": result[2],
+        "number of pages": result[3],
+        "publication date": result[4],
+        "publisher":result[5]
+    }
+
+    return thisBook
+    # return render_template("eachbook.html", thisBook = thisBook)
 
 @bp.route("/comment/<int:id>", methods = ("GET", "POST", "PUT"))
 def comment(id):

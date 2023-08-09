@@ -60,8 +60,8 @@ def bookinfo(id):
         "publisher":result[5]
     }
 
-    return thisBook
-    # return render_template("eachbook.html", thisBook = thisBook)
+    # return thisBook
+    return render_template("eachbook.html", thisBook = thisBook)
 
 @bp.route("/comment/<int:id>", methods = ("GET", "POST", "PUT"))
 def comment(id):

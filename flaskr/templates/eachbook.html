@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{thisBook.title}}
+{% endblock %}
+
+{% block main %}
+    <div>
+        <p>Title:{{thisBook.title}} </p>
+        <p>Author: {{thisBook.author}}</p>
+        <p>Average rating: {{thisBook['average rating']}}</p>
+        <p>Number of pages: {{thisBook['number of pages']}}</p>
+        <p>Publication date: {{thisBook['publication date']}} </p>
+        <p>Publisher: {{thisBook['publisher']}}</p>
+    </div>
+
+    <form action = "/books/comment" method = "POST">
+        <label for = "comment">Comment</label><br>
+        <!-- <input type = "textarea" name = "comment"> -->
+        <textarea rows = "10" cols = "40" name = "comment" placeholder = "Comment here"></textarea>
+        <button type = "submit"> Submit</button>
+    </form>
+{% endblock %}

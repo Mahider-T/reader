@@ -24,7 +24,7 @@ bp = Blueprint('books', __name__, url_prefix = '/books')
 #             db.commit()
 #     return "Succuss!"
 
-globalvalue = None
+globalvalue1 = None
 
 @bp.route("/find", methods = ("GET", "POST"))
 def find():
@@ -50,8 +50,16 @@ def find():
         # return jsonify(attr)
 @bp.route("/bookinfo/<int:id>")
 def bookinfo(id):
+
+    from . import auth
+    userID = session["user_id"]
+
     db = get_db()
     result = db.execute("SELECT title, authors, average_rating,num_pages, publication_date, publisher, bookID FROM books WHERE bookID = ?", (id,)).fetchall()[0]
+    personal = db.execute("SELECT comment FROM bookuser WHERE bookID = ? AND userID = ?", (id,userID,)).fetchone()
+    
+    if personal is not None:
+        personal = personal[0]
 
     thisBook = {
         "title": result[0],
@@ -60,15 +68,16 @@ def bookinfo(id):
         "number of pages": result[3],
         "publication date": result[4],
         "publisher":result[5],
-        "id": result[6]
+        "id": result[6],
+        "your comment": personal
     }
 
-    global globalvalue 
-    globalvalue = thisBook
+    global globalvalue1 
+    globalvalue1 = thisBook
 
     # return thisBook
     return render_template("eachbook.html", thisBook = thisBook)
-
+    # return f"{personal}"
 @bp.route("/comment/<int:id>", methods = ("GET", "POST", "PUT"))
 def comment(id):
     from . import auth
@@ -85,8 +94,8 @@ def comment(id):
         # from . import auth
         # userID = session["user_id"]
         # 
-        hasCommented = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,))
-        if not hasCommented:
+        hasCommented = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,)).fetchone()
+        if hasCommented is None:
             db.execute("INSERT INTO bookuser (userID, bookID, comment) values (?,?,?)", (int(userID), id, comment,))
             db.commit()
         else:
@@ -94,9 +103,9 @@ def comment(id):
             db.commit()
         updatedBook = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,)).fetchall()
 
-        trial = "Trail text"
         # return updatedBook
-        return render_template("eachbook.html", thisBook = globalvalue, trail = trial )
+        return redirect(url_for('books.bookinfo', id = id))
+        # return render_template("eachbook.html", thisBook = globalvalue)
         
         # db.commit()
         # return f"{id} --- {userID} --- {comment}"

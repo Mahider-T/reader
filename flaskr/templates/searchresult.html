@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+    <h1> Search results</h1>
     <div style = "margin: 20px 0px;">
         {% for result in results %}
             <a href = "bookinfo/{{result[1]}}">{{result[0]}}</a><br>

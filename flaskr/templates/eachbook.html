@@ -5,21 +5,20 @@
 {% endblock %}
 
 {% block main %}
-    <p style=" color: red;">trial</p>
     <div>
-        <p>Title:{{thisBook.title}} </p>
-        <p>Author: {{thisBook.author}}</p>
-        <p>Average rating: {{thisBook['average rating']}}</p>
-        <p>Number of pages: {{thisBook['number of pages']}}</p>
-        <p>Publication date: {{thisBook['publication date']}} </p>
-        <p>Publisher: {{thisBook['publisher']}}</p>
+        <p><h3>Title:</h3>{{thisBook.title}} </p>
+        <p><h3>Author:</h3> {{thisBook.author}}</p>
+        <p><h3>Average rating:</h3> {{thisBook['average rating']}}</p>
+        <p><h3>Number of pages:</h3> {{thisBook['number of pages']}}</p>
+        <p><h3>Publication date:</h3> {{thisBook['publication date']}} </p>
+        <p><h3>Publisher:</h3> {{thisBook['publisher']}}</p>
+        <p><h3>Your comment:</h3> {{thisBook['your comment']}} </p>
     </div>
 
     <form action = "/books/comment/{{thisBook.id}}" method = "POST">
         <label for = "comment">Comment</label><br>
-        <!-- <input type = "textarea" name = "comment"> -->
         <textarea rows = "10" cols = "40" name = "comment" placeholder = "Comment here"></textarea>
-        <button type = "submit"> Submit</button>
+        <button type = "submit"> Comment</button>
     </form>
 
 {% endblock %}

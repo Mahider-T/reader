@@ -19,10 +19,6 @@ def yourbooks():
     db = get_db()
     favorites = db.execute("SELECT books.title,  books.authors, books.publisher, books.average_rating, bookuser.comment, bookuser.rating FROM books, bookuser WHERE books.bookID = bookuser.bookID AND bookuser.userID = ?", (session["user_id"],))
     favorites = favorites.fetchall()
-    # favorites = [list(favorite) for favorite in favorites]
-    # favorites = favorites.comment
-    # return favorites
-
     return render_template("index.html", favorites = favorites)
     # return f"{type(favorites)}"
 

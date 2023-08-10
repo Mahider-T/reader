@@ -34,6 +34,8 @@ def find():
         search = request.form.get("search")
         final = db.execute("SELECT title, bookID FROM books WHERE title LIKE ?", (f"%{search}%",))
         final = final.fetchall()  
+        return render_template("searchresult.html", results = final)
+    
         # results = [element for element in final]
 
         # return results
@@ -43,7 +45,7 @@ def find():
         
         # highlighted_titles = [f"</br>{title}</br>" for title in highlighted_titles]
         # return highlighted_titles
-        return render_template("searchresult.html", results = final)
+        
         # return "\n\n".join(highlighted_titles)
         # return [title for title in highlighted_titles]
         # titles = f"{type(titles[0])}"
@@ -79,9 +81,8 @@ def bookinfo(id):
     global globalvalue1 
     globalvalue1 = thisBook
 
-    # return thisBook
     return render_template("eachbook.html", thisBook = thisBook)
-    # return f"{personal}"
+
 @bp.route("/comment/<int:id>", methods = ("GET", "POST", "PUT"))
 def comment(id):
     from . import auth
@@ -94,10 +95,6 @@ def comment(id):
     if request.method == "POST":
         db = get_db()
         comment = request.form["comment"]
-
-        # from . import auth
-        # userID = session["user_id"]
-        # 
         hasCommented = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,)).fetchone()
         if hasCommented is None:
             db.execute("INSERT INTO bookuser (userID, bookID, comment) values (?,?,?)", (int(userID), id, comment,))
@@ -107,7 +104,6 @@ def comment(id):
             db.commit()
         updatedBook = db.execute("SELECT comment FROM bookuser WHERE bookID = ? and userID = ?",(id,userID,)).fetchall()
 
-        # return updatedBook
         return redirect(url_for('books.bookinfo', id = id))
         # return render_template("eachbook.html", thisBook = globalvalue)
         
@@ -148,7 +144,6 @@ def rate(id):
 @bp.route("/addbook", methods = ("GET", "POST"))
 def addbook():
     if request.method == "POST":
-        # bookID = request.form["bookID"]
         title = request.form["title"]
         author = request.form["author"]
         isbn = request.form["isbn"]
@@ -161,13 +156,10 @@ def addbook():
 def topbooks():
     db = get_db()
     results = db.execute("SELECT title, authors, average_rating, publication_date, publisher FROM books ORDER BY average_rating DESC, title ASC LIMIT 10;")
-    # results = db.execute("SELECT title, average_rating FROM books ORDER BY average_rating DESC LIMIT 10;")
     results = results.fetchall()
     results = [result for result in results]
-    # for item in results:
-    #     if 
     return render_template("topbooks.html", results = results)
-    # return result
+    
 @bp.route("/trending")
 def trending():
     db = get_db()
@@ -175,10 +167,6 @@ def trending():
     results = results.fetchall()
 
     return render_template("trending.html", results = results)
-# @bp.route("/myBooks")
-# def myBooks():
-#     db = get_db()
-#     db.execute()
 
 @bp.route("/filter", methods = ("GET", "POST"))
 def filter():
@@ -200,14 +188,7 @@ def filter():
     else:
         result = db.execute("SELECT bookID, title FROM books WHERE average_rating BETWEEN ? AND ? AND num_pages BETWEEN ? AND ? AND publication_date > ? AND publication_date < ?",(float(min_rating), float(max_rating), int(min_pages), int(max_pages),start_date,end_date)).fetchall()
         return render_template("filter.html", results = result)
-        # return end_date
 
-@bp.route("getUser")
-@login_required
-def getUser():
-    # userID = session["user_id"]
-    # return f"userid is {userID}"
-    return "whatttaaaaa"
 
 
 

@@ -1,6 +1,7 @@
 import csv
 import functools
 import sqlite3
+import datetime
 
 from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app,jsonify)
 
@@ -56,10 +57,12 @@ def bookinfo(id):
 
     db = get_db()
     result = db.execute("SELECT title, authors, average_rating,num_pages, publication_date, publisher, bookID FROM books WHERE bookID = ?", (id,)).fetchall()[0]
-    personal = db.execute("SELECT comment FROM bookuser WHERE bookID = ? AND userID = ?", (id,userID,)).fetchone()
-    
+    personal = db.execute("SELECT comment,rating FROM bookuser WHERE bookID = ? AND userID = ?", (id,userID,)).fetchone()
+    comment = ""
+    rating = ""
     if personal is not None:
-        personal = personal[0]
+        comment = personal[0]
+        rating = personal[1]
 
     thisBook = {
         "title": result[0],
@@ -69,7 +72,8 @@ def bookinfo(id):
         "publication date": result[4],
         "publisher":result[5],
         "id": result[6],
-        "your comment": personal
+        "your comment": comment,
+        "your rating": rating
     }
 
     global globalvalue1 
@@ -129,15 +133,17 @@ def rate(id):
     from . import auth
     userID = session["user_id"]
     db = get_db()
+
     if request.method == "POST":
-        rate = request.form["rate"]
-        execution = db.execute("INSERT INTO bookuser (userID, bookID, rating) VALUES (?,?,?)", (userID, id, rate,))
-        db.commit()
-        rating = {
-            "bookID": id,
-            "rate" : rate
-        }
-        return jsonify(rating)
+        rate = int(request.form["rate"])
+        check = db.execute("SELECT * FROM bookuser WHERE userID = ? AND bookID = ?", (userID, id,)).fetchone()
+        if not check:
+            db.execute("INSERT INTO bookuser (userID, bookID, rating) values (?,?,?)", (userID, id, rate,))
+            db.commit()
+        else:
+            execution = db.execute("UPDATE bookuser SET rating = ? WHERE userID = ? AND bookID = ? ", (rate, userID, id,))
+            db.commit()
+        return redirect(url_for('books.bookinfo', id = id))
 
 @bp.route("/addbook", methods = ("GET", "POST"))
 def addbook():
@@ -176,8 +182,25 @@ def trending():
 
 @bp.route("/filter", methods = ("GET", "POST"))
 def filter():
-    return "hi"
+    today = datetime.date.today()
+    
+    min_rating = request.args.get('min_rating')
+    max_rating = request.args.get('max_rating')
+    min_pages = request.args.get('min_pages')
+    max_pages = request.args.get('max_pages')
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
 
+    if not end_date:    
+        end_date = today.strftime('%Y-%m-%d')
+
+    db = get_db()
+    if min_rating is None:
+        return render_template("filter.html")
+    else:
+        result = db.execute("SELECT bookID, title FROM books WHERE average_rating BETWEEN ? AND ? AND num_pages BETWEEN ? AND ? AND publication_date > ? AND publication_date < ?",(float(min_rating), float(max_rating), int(min_pages), int(max_pages),start_date,end_date)).fetchall()
+        return render_template("filter.html", results = result)
+        # return end_date
 
 @bp.route("getUser")
 @login_required

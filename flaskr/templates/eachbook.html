@@ -13,12 +13,23 @@
         <p><h3>Publication date:</h3> {{thisBook['publication date']}} </p>
         <p><h3>Publisher:</h3> {{thisBook['publisher']}}</p>
         <p><h3>Your comment:</h3> {{thisBook['your comment']}} </p>
+        <p><h3>Your rating:</h3> {{thisBook['your rating']}} </p>
     </div>
 
     <form action = "/books/comment/{{thisBook.id}}" method = "POST">
-        <label for = "comment">Comment</label><br>
+        <label for = "comment"><h3>Comment</h3></label><br>
         <textarea rows = "10" cols = "40" name = "comment" placeholder = "Comment here"></textarea>
-        <button type = "submit"> Comment</button>
+        <button type = "submit">Comment</button>
     </form>
-
+    <form action = "/books/rate/{{thisBook.id}}" method = "POST">
+        <label  for = "rate"><h3>Rate</h3></label><br>
+        <select name="rate">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+          <button type = "submit">Rate</button>
+    </form>
 {% endblock %}

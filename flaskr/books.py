@@ -109,7 +109,7 @@ def comment(id):
         
         # db.commit()
         # return f"{id} --- {userID} --- {comment}"
-        return hasCommented
+        # return hasCommented
     # else:
     #     db = get_db()
     #     comment = request.form["comment"]
@@ -174,6 +174,9 @@ def trending():
 #     db = get_db()
 #     db.execute()
 
+@bp.route("/filter", methods = ("GET", "POST"))
+def filter():
+    return "hi"
 
 
 @bp.route("getUser")

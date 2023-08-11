@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Trending
+    Recently published
 {% endblock %}
 
 {% block main %}
@@ -16,7 +16,7 @@
         </tr>
         {% for result in results %}
         <tr>
-            <td>{{result[0]}}</td>
+            <td><a href = "bookinfo/{{result[5]}}">{{result[0]}}</a></td>
             <td>{{result[1]}}</td>
             <td>{{result[2]}}</td>
             <td>{{result[3]}}</td>

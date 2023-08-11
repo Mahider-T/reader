@@ -155,7 +155,7 @@ def addbook():
 @bp.route("/topbooks")
 def topbooks():
     db = get_db()
-    results = db.execute("SELECT title, authors, average_rating, publication_date, publisher FROM books ORDER BY average_rating DESC, title ASC LIMIT 10;")
+    results = db.execute("SELECT title, authors, average_rating, publication_date, publisher, bookID FROM books ORDER BY average_rating DESC, title ASC LIMIT 10;")
     results = results.fetchall()
     results = [result for result in results]
     return render_template("topbooks.html", results = results)
@@ -163,7 +163,7 @@ def topbooks():
 @bp.route("/trending")
 def trending():
     db = get_db()
-    results = db.execute("SELECT title, authors, average_rating, publication_date, publisher FROM books ORDER BY publication_date DESC LIMIT 10;")
+    results = db.execute("SELECT title, authors, average_rating, publication_date, publisher, bookID FROM books ORDER BY publication_date DESC LIMIT 20;")
     results = results.fetchall()
 
     return render_template("trending.html", results = results)

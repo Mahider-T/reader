@@ -17,7 +17,7 @@ from . import auth
 @login_required
 def yourbooks():
     db = get_db()
-    favorites = db.execute("SELECT books.title,  books.authors, books.publisher, books.average_rating, bookuser.comment, bookuser.rating FROM books, bookuser WHERE books.bookID = bookuser.bookID AND bookuser.userID = ?", (session["user_id"],))
+    favorites = db.execute("SELECT books.title,  books.authors, books.publisher, books.average_rating, bookuser.comment, bookuser.rating, books.bookID FROM books, bookuser WHERE books.bookID = bookuser.bookID AND bookuser.userID = ?", (session["user_id"],))
     favorites = favorites.fetchall()
     return render_template("index.html", favorites = favorites)
     # return f"{type(favorites)}"

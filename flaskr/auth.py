@@ -64,9 +64,12 @@ def login():
         row = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
         
         if row is None:
-            error = "No such user."
+            error = "No such user"
+            # return redirect(url_for("auth.login", error = error))
+            return render_template("login.html", error = error)
         elif not check_password_hash(row[2], password):
             error = "Incorrect password"
+            return render_template("login.html", error = error)
         
         # return f"{error}"
         

@@ -16,17 +16,17 @@ Showcase: Display the most recently published books and top-rated books.
 
 Getting Started
 
-Prerequisites
-Python 3.0 or higher
-Flask
-A SQLite database
+    Prerequisites
+        Python 3.0 or higher
+        Flask
+        A SQLite database
 
-Installation
-Clone the repository
-   git clone https://github.com/Mahider-T/reader
+    Installation
+        Clone the repository
+            git clone https://github.com/Mahider-T/reader
 
-Run the application
-   flask --app flaskr run --debug
-Usage
-After running the server, open your web browser and visit http://localhost:5000 to start using the application.
+    Run the application
+        flask --app flaskr run --debug
+    Usage
+        After running the server, open your web browser and visit http://localhost:5000 to start using the application.
 

@@ -32,41 +32,6 @@ A simple Flask application to review books.
 
 ## Getting Started
 
-### Project Structure
-
-├── flaskr
-│   ├── auth.py
-│   ├── books.csv
-│   ├── books.py
-│   ├── db.py
-│   ├── display.py
-│   ├── flaskr.sqlite
-│   ├── __init__.py
-│   ├── __pycache__
-│   │   ├── auth.cpython-310.pyc
-│   │   ├── books.cpython-310.pyc
-│   │   ├── db.cpython-310.pyc
-│   │   ├── display.cpython-310.pyc
-│   │   └── __init__.cpython-310.pyc
-│   ├── schema.sql
-│   ├── statics
-│   │   └── style.css
-│   ├── templates
-│   │   ├── eachbook.html
-│   │   ├── filter.html
-│   │   ├── index.html
-│   │   ├── layout.html
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   ├── searchresult.html
-│   │   ├── topbooks.html
-│   │   └── trending.html
-│   └── tests
-├── instance
-│   └── flaskr.sqlite
-├── README.md
-
-
 ### Prerequisites
         Python 3.0 or higher
         Flask

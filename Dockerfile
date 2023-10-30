@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.9-slim-buster
+FROM python:3.11.4-alpine3.18
 
-WORKDIR .
+WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY . /app
 
 RUN pip3 install -r requirements.txt
 
